@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Dashboard</title>
+</head>
+<body>
+
+<h2>Customer Dashboard</h2>
+
+<!-- ✅ Success message -->
+<p id="msg" style="color:green; font-weight:bold;"></p>
+
+<a href="viewCars">View Available Cars</a>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("msg") === "success") {
+        document.getElementById("msg").innerText = "Car rented successfully!";
+    }
+</script>
+
+</body>
+</html>

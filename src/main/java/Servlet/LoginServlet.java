@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -23,7 +24,9 @@ public class LoginServlet extends HttpServlet {
 
         try {
             Connection con = DBUtil.getConnection();
-            String sql = "SELECT role FROM users WHERE username=? AND password=?";
+
+            //fetch id + role
+            String sql = "SELECT id, role FROM users WHERE username=? AND password=?";
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setString(1, username);
@@ -32,14 +35,25 @@ public class LoginServlet extends HttpServlet {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+                int userId = rs.getInt("id");
                 String role = rs.getString("role");
 
+                //Store in session
+                HttpSession session = request.getSession();
+                session.setAttribute("userId", userId);
+                session.setAttribute("role", role);
+
+                //Role-based redirect
                 if ("admin".equals(role)) {
                     response.sendRedirect("adminDashboard.html");
-                } else {
+                } else if ("customer".equals(role)) {
                     response.sendRedirect("customerDashboard.html");
+                } else {
+                    response.sendRedirect("login.html");
                 }
+
             } else {
+                //Invalid login
                 response.sendRedirect("login.html");
             }
 

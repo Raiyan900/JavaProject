@@ -7,17 +7,9 @@
 
 <h2>Customer Dashboard</h2>
 
-<!-- ✅ Success message -->
-<p id="msg" style="color:green; font-weight:bold;"></p>
-
-<a href="viewCars">View Available Cars</a>
-
-<script>
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("msg") === "success") {
-        document.getElementById("msg").innerText = "Car rented successfully!";
-    }
-</script>
+<a href="viewCars">Rent a Car</a><br><br>
+<a href="myBookings">My Bookings</a><br><br>
+<a href="login.html">Logout</a>
 
 </body>
 </html>

@@ -12,7 +12,7 @@ public class DBUtil {
             con = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/car_rental",
                 "root",
-                "Your_Password"  
+                //your password(mysql) in "" :)
             );
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rent Car</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        .container {
+            width: 400px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 6px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Rent Car</h2>
+
+    <form action="RentCarServlet" method="post">
+
+        <!-- These values come from servlet via query string -->
+        <input type="hidden" name="carId" value="${param.carId}">
+        <input type="hidden" name="rate" value="${param.rate}">
+
+        Car Name:
+        <input type="text" value="${param.carName}" readonly>
+
+        Brand:
+        <input type="text" value="${param.brand}" readonly>
+
+        Price Per Day:
+        <input type="text" value="${param.rate}" readonly>
+
+        Rental Date:
+        <input type="date" name="rentalDate" required>
+
+        Number of Days:
+        <input type="number" name="days" min="1" required>
+
+        <button type="submit">Confirm Rent</button>
+    </form>
+</div>
+
+</body>
+</html>

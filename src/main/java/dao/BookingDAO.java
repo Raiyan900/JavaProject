@@ -3,7 +3,8 @@ package dao;
 import db.DBUtil;
 import model.Booking;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 public class BookingDAO {
 
@@ -13,41 +14,52 @@ public class BookingDAO {
         try {
             Connection con = DBUtil.getConnection();
 
-            // 1️ Insert booking
-            String sql = "INSERT INTO bookings (user_id, car_id, start_date, end_date, total_price, status) VALUES (?, ?, ?, ?, ?, ?)";
-            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            // Generate rental_id (since no auto increment)
+            String rentalId = "R" + System.currentTimeMillis();
 
-            ps.setInt(1, booking.getUserId());
-            ps.setInt(2, booking.getCarId());
-            ps.setString(3, booking.getStartDate());
-            ps.setString(4, booking.getEndDate());
-            ps.setInt(5, booking.getTotalPrice());
-            ps.setString(6, booking.getStatus());
+            // 1️⃣ Insert into Rental table
+            String sql = "INSERT INTO Rental " +
+                         "(rental_id, rental_date, cust, rep, car, days, amount) " +
+                         "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, rentalId);
+            ps.setString(2, booking.getStartDate());  
+            ps.setString(3, booking.getCustId());      
+            ps.setString(4, booking.getEmpId());      
+            ps.setString(5, booking.getCarId());  
+            ps.setInt(6, booking.getDays()); 
+            ps.setDouble(7, booking.getTotalPrice());
 
             int rows = ps.executeUpdate();
 
             if (rows > 0) {
-                ResultSet rs = ps.getGeneratedKeys();
 
-                if (rs.next()) {
-                    int bookingId = rs.getInt(1);
+                //Insert into Payment table
+                String paySql = "INSERT INTO Payment " +
+                                "(payment_id, payment_date, rental, amount, mode) " +
+                                "VALUES (?, CURDATE(), ?, ?, ?)";
 
-                    // 2️ Insert payment
-                    String paySql = "INSERT INTO payments (booking_id, amount, payment_status, payment_date) VALUES (?, ?, ?, NOW())";
-                    PreparedStatement psPay = con.prepareStatement(paySql);
-                    psPay.setInt(1, bookingId);
-                    psPay.setInt(2, booking.getTotalPrice());
-                    psPay.setString(3, "PAID");
-                    psPay.executeUpdate();
+                PreparedStatement psPay = con.prepareStatement(paySql);
 
-                    // 3️ Mark car unavailable
-                    PreparedStatement psCar = con.prepareStatement(
-                            "UPDATE cars SET available = false WHERE id = ?");
-                    psCar.setInt(1, booking.getCarId());
-                    psCar.executeUpdate();
+                String paymentId = "P" + System.currentTimeMillis();
 
-                    success = true;
-                }
+                psPay.setString(1, paymentId);
+                psPay.setString(2, rentalId);
+                psPay.setDouble(3, booking.getTotalPrice());
+                psPay.setString(4, "CASH");   // or UPI / Card
+
+                psPay.executeUpdate();
+
+                //Update Car status to Rented
+                PreparedStatement psCar = con.prepareStatement(
+                        "UPDATE Car SET status = 'Rented' WHERE car_id = ?");
+
+                psCar.setString(1, booking.getCarId());
+                psCar.executeUpdate();
+
+                success = true;
             }
 
         } catch (Exception e) {

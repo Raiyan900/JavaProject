@@ -1,18 +1,34 @@
-# Eclipse files
+# =========================
+# Eclipse IDE files
+# =========================
 .classpath
 .project
 .settings/
 
-# Build folders
+# =========================
+# Build & Output folders
+# =========================
 build/
+bin/
 target/
 
+# =========================
+# Tomcat / Servers
+# =========================
+Servers/
+
+# =========================
 # Logs
+# =========================
 *.log
 
-# OS files
+# =========================
+# OS / System files
+# =========================
 .DS_Store
 Thumbs.db
 
-# Optional: Ignore DB credentials file
-# DBUtil.java
+# =========================
+# Ignore DB credentials file
+# =========================
+src/main/java/db/DBUtil.java

@@ -2,19 +2,35 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
+    <style>
+        body { font-family: Arial; background: #eef2f5; }
+        .container { width: 600px; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; }
+        h2 { text-align: center; }
+        a { display: block; padding: 10px; margin: 8px 0; background: #007bff; color: white; text-decoration: none; text-align: center; border-radius: 4px; }
+        a:hover { background: #0056b3; }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h2>Admin Dashboard</h2>
+    <a href="addCar.html">Add Car</a>
+    <a href="adminViewBookings">View All Rentals</a>
+    <a href="login.html">Logout</a>
+    
+    <script>
+    const params = new URLSearchParams(window.location.search);
+    const msg = params.get("msg");
 
-<h2>Admin Dashboard</h2>
-
-<a href="addCar.html">Add Car</a><br><br>
-
-<a href="adminBookings">View All Bookings</a><br><br>
-
-<!-- ✅ NEW OPTION -->
-<a href="addMaintenance.html">Add Car to Maintenance</a><br><br>
-
-<a href="login.html">Logout</a>
-
+    if (msg === "success") {
+        alert("Car added successfully!");
+    } else if (msg === "failed") {
+        alert("Failed to add car.");
+    } else if (msg === "error") {
+        alert("Error while adding car.");
+    }
+</script>
+    
+    
+</div>
 </body>
 </html>

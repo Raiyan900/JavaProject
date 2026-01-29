@@ -2,14 +2,67 @@
 <html>
 <head>
     <title>Customer Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+        }
+        .navbar {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+        }
+        .container {
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        a.btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        a.btn.logout {
+            background: #dc3545;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Customer Dashboard</h2>
+<div class="navbar">
+    <h2>Customer Dashboard</h2>
+</div>
 
-<a href="viewCars">Rent a Car</a><br><br>
-<a href="myBookings">My Bookings</a><br><br>
-<a href="login.html">Logout</a>
+<div class="container">
+
+    <div class="card">
+        <h3>Rent a Car</h3>
+        <p>View available cars and make a booking.</p>
+        <a class="btn" href="viewCars">View Available Cars</a>
+    </div>
+
+    <div class="card">
+        <h3>My Bookings</h3>
+        <p>View your past and current bookings.</p>
+        <a class="btn" href="myBookings">View My Bookings</a>
+    </div>
+
+    <div class="card">
+        <h3>Logout</h3>
+        <a class="btn logout" href="login.html">Logout</a>
+    </div>
+
+</div>
 
 </body>
 </html>

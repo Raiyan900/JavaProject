@@ -2,17 +2,26 @@
 <html>
 <head>
     <title>Add Car</title>
+    <style>
+        body { font-family: Arial; background: #f2f2f2; }
+        .box { width: 400px; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; }
+        input, button { width: 100%; padding: 8px; margin: 6px 0; }
+        button { background: #007bff; color: white; border: none; border-radius: 4px; }
+    </style>
 </head>
 <body>
 
 <h2>Add New Car</h2>
 
 <form action="addCar" method="post">
-    Car Name: <input name="car_name" required><br><br>
-    Brand: <input name="brand" required><br><br>
-    Price per day: <input type="number" name="price_per_day" required><br><br>
-    <button type="submit">Add Car</button>
+    Car Name: <input type="text" name="car_name" required><br><br>
+    Brand: <input type="text" name="brand" required><br><br>
+    Rate per Day: <input type="number" name="rate" step="1" required><br><br>
+
+    <input type="submit" value="Add Car">
 </form>
+
+<a href="adminDashboard.html">Back to Dashboard</a>
 
 </body>
 </html>

@@ -28,38 +28,51 @@ public class RentCarServlet extends HttpServlet {
         }
 
         String custId = session.getAttribute("cust_id").toString();
-
         int carId = Integer.parseInt(request.getParameter("car_id"));
         int rate = Integer.parseInt(request.getParameter("rate"));
         int days = Integer.parseInt(request.getParameter("days"));
-
         int amount = rate * days;
 
         try (Connection con = DBUtil.getConnection()) {
+        	
+        	
 
-            // ================= INSERT RENTAL =================
+            // ===== GET EMPLOYEE =====
+        	String empId = null;
+        	String empSql = "SELECT emp_id FROM employee LIMIT 1";
+        	PreparedStatement psEmp = con.prepareStatement(empSql);
+        	ResultSet rsEmp = psEmp.executeQuery();
+
+        	if (rsEmp.next()) {                    // 👈 MISSING LINE
+        	    empId = rsEmp.getString("emp_id"); // 👈 MISSING LINE
+        	}
+
+        	System.out.println("Assigned empId = " + empId);
+
+
+            // ===== INSERT RENTAL =====
             String rentalSql =
-                "INSERT INTO rental (cust_id, car_id, rental_date, days, amount, status) " +
-                "VALUES (?, ?, CURDATE(), ?, ?, 'BOOKED')";
+            	    "INSERT INTO rental (cust_id, car_id, emp_id, rental_date, days, amount, status) " +
+            	    "VALUES (?, ?, ?, CURDATE(), ?, ?, 'BOOKED')";
 
             PreparedStatement psRental =
                 con.prepareStatement(rentalSql, Statement.RETURN_GENERATED_KEYS);
 
             psRental.setString(1, custId);
             psRental.setInt(2, carId);
-            psRental.setInt(3, days);
-            psRental.setInt(4, amount);
+            psRental.setString(3, empId);
+            psRental.setInt(4, days);
+            psRental.setInt(5, amount);
 
             psRental.executeUpdate();
 
-            //Get generated rental_id
             ResultSet rsKeys = psRental.getGeneratedKeys();
             int rentalId = 0;
             if (rsKeys.next()) {
                 rentalId = rsKeys.getInt(1);
             }
 
-            // ================= INSERT PAYMENT =================
+            // ===== INSERT PAYMENT =====
             String paymentSql =
                 "INSERT INTO payment (rental_id, amount, payment_date, payment_status) " +
                 "VALUES (?, ?, CURDATE(), 'PAID')";
@@ -67,10 +80,9 @@ public class RentCarServlet extends HttpServlet {
             PreparedStatement psPayment = con.prepareStatement(paymentSql);
             psPayment.setInt(1, rentalId);
             psPayment.setInt(2, amount);
-
             psPayment.executeUpdate();
 
-            // ================= UPDATE CAR =================
+            // ===== UPDATE CAR =====
             String updateCar =
                 "UPDATE car SET available = FALSE WHERE car_id = ?";
 
@@ -86,3 +98,4 @@ public class RentCarServlet extends HttpServlet {
         }
     }
 }
+
